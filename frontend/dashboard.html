@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meridian — Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body class="dashboard-page">
+
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-mark">M</span>
+      <span class="logo-text">Meridian</span>
+    </div>
+    <nav>
+      <a href="#" class="nav-item active" data-section="overview">Overview</a>
+      <a href="#" class="nav-item" data-section="transactions">Transactions</a>
+      <a href="#" class="nav-item" data-section="webhooks">Webhooks</a>
+      <a href="#" class="nav-item" data-section="analytics">Analytics</a>
+    </nav>
+    <div class="sidebar-footer">
+      <span id="dbHost" class="env-badge">prod-db.internal</span>
+      <a href="/index.html" class="sign-out">Sign out</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- Overview -->
+    <section id="section-overview" class="section active">
+      <h1>Overview</h1>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <p class="stat-label">Total Volume (USD)</p>
+          <p class="stat-value" id="totalVolume">—</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Succeeded</p>
+          <p class="stat-value green" id="countSucceeded">—</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Failed</p>
+          <p class="stat-value red" id="countFailed">—</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Refunded</p>
+          <p class="stat-value amber" id="countRefunded">—</p>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Recent Transactions</h2>
+        <table id="recentTable">
+          <thead>
+            <tr>
+              <th>ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recentBody"><tr><td colspan="5" class="loading">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Transactions -->
+    <section id="section-transactions" class="section">
+      <h1>Transactions</h1>
+      <div class="toolbar">
+        <button class="btn-primary" id="newChargeBtn">+ New Charge</button>
+      </div>
+
+      <div id="chargeForm" class="card form-card hidden">
+        <h2>New Charge</h2>
+        <form id="chargeFormEl">
+          <div class="field-row">
+            <div class="field">
+              <label>Customer Email</label>
+              <input type="email" id="fEmail" required />
+            </div>
+            <div class="field">
+              <label>Amount (USD)</label>
+              <input type="number" id="fAmount" step="0.01" min="0.01" required />
+            </div>
+          </div>
+          <div class="field">
+            <label>Description</label>
+            <input type="text" id="fDesc" required />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Charge</button>
+            <button type="button" class="btn-secondary" id="cancelChargeBtn">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <table id="txTable">
+          <thead>
+            <tr>
+              <th>ID</th><th>Customer</th><th>Amount</th><th>Currency</th><th>Status</th><th>Description</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="txBody"><tr><td colspan="7" class="loading">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Webhooks -->
+    <section id="section-webhooks" class="section">
+      <h1>Webhook Events</h1>
+      <p class="muted">Endpoint: <code>POST /api/webhooks/payment</code></p>
+      <div class="card">
+        <p class="muted">Webhook logs are stored in the database and verified against <code>WEBHOOK_SECRET</code>. Events are idempotent by <code>event_id</code>.</p>
+        <table>
+          <thead><tr><th>Event ID</th><th>Type</th><th>Verified</th><th>Received At</th></tr></thead>
+          <tbody id="webhookBody"><tr><td colspan="4" class="loading">No events yet — awaiting incoming webhooks.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Analytics -->
+    <section id="section-analytics" class="section">
+      <h1>Analytics</h1>
+      <div class="card">
+        <h2>Revenue Summary <span class="badge">via Internal API</span></h2>
+        <pre id="revenueJson" class="json-block">Fetching from internal-api.company.com…</pre>
+      </div>
+      <div class="card">
+        <h2>Customer Stats <span class="badge">via Internal API</span></h2>
+        <pre id="customerJson" class="json-block">Fetching from internal-api.company.com…</pre>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
